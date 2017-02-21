@@ -1,0 +1,28 @@
+name       : godep
+version    : 79
+release    : 1
+source     :
+    - https://github.com/tools/godep/archive/v79.tar.gz : 3dd2e6c4863077762498af98fa0c8dc5fedffbca6a5c0c4bb42b452c8268383d
+license    : BSD-3-Clause
+component  : programming.tools
+summary    : godep helps build packages reproducibly by fixing their dependencies.
+description: |
+    godep helps build packages reproducibly by fixing their dependencies.
+extract    : no
+builddeps  :
+    - git
+    - golang
+setup      : |
+    export godepdir="src/github.com/tools/godep"
+    mkdir {bin,pkg,src}
+    mkdir -p src/github.com/tools/
+    tar -xf $sources/v$version.tar.gz -C src/github.com/tools/
+    mv src/github.com/tools/godep-$version $godepdir
+    mv $godepdir/vendor/github.com/* src/github.com/
+    mv $godepdir/vendor/golang.org src/
+build      : |
+    export GOPATH=$workdir
+    cd src/github.com/tools/godep
+    go build -o godep *.go
+install    : |
+    install -Dm00755 src/github.com/tools/godep/godep $installdir/usr/bin/godep
